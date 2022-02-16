@@ -1,0 +1,11 @@
+ 
+  1) should check if brackets sequence is correct 8
+  2) should check if brackets sequence is correct 9
+  
+  3) should check if brackets sequence is correct 11
+  4) should check if brackets sequence is correct 12
+  
+  5) should check if brackets sequence is correct 15
+  
+  6) should check if brackets sequence is correct 19
+  7) should check if brackets sequence is correct 20
