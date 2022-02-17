@@ -1,32 +1,47 @@
 module.exports = function check(str, bracketsConfig) {
   
   if (str.length % 2 !== 0) return false;
-
-  let array = [...str];  
-  let indexFirstCloser;
-  let indexCurrent;
+  
+  let tempStack;
   let kindBrackets;
 
-  while (array.length > 0) {
-    
-    indexFirstCloser = array.length - 1;
-    
-    for (let i = 0; i < bracketsConfig.length; i++) {
-      indexCurrent = array.indexOf((bracketsConfig[i])[1]);
-      
-      if (indexCurrent > 0 &&
-        indexFirstCloser >= indexCurrent) {
-        indexFirstCloser = indexCurrent;
-        kindBrackets = i;
-        
+    function isOpening (char, arrSquare) {
+      for (let i = 0; i < arrSquare.length; i++) {
+        if (arrSquare[i][0] === char) {
+          kindBrackets = i;          
+          return true;
+        }
       }
+      return false;
+    }
+
+    function isClosing (char, arrSquare) {
+      for (let i = 0; i < arrSquare.length; i++) {
+        if (arrSquare[i][1] === char) {          
+          kindBrackets = i;          
+          return true;
+        }        
+      }
+      return false;
+    }
+    // Инициализация стека
+    const stack = [];
+    // Проходим по каждому символу в строке
+    for (let bracket of str) {
+      // Смотрим открывающий или закрывающий
       
+      if (isOpening(bracket, bracketsConfig)) {
+        if (bracketsConfig[kindBrackets][0] !== bracketsConfig[kindBrackets][1]) {
+          stack.push(bracket);
+        } else if (bracket === stack[stack.length - 1]) {
+          stack.pop();
+        } else stack.push(bracket);
+        
+      } else if (isClosing(bracket, bracketsConfig)) {
+        // Если для закрывающего не нашлось открывающего, значит баланса нет       
+        if (stack.pop() !== bracketsConfig[kindBrackets][0]) return false;        
+      }
     }
     
-    if (array[indexFirstCloser - 1] === bracketsConfig[kindBrackets][0]) {
-      array.splice(indexFirstCloser - 1, 2);      
-    } else return false;
-  }
-  return true;
-}
-//console.log(check('([{}])', [['(', ')'], ['[', ']'], ['{', '}']]));
+    return stack.length === 0;
+  };
